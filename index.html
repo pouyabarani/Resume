@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pouya Barani | AI & Machine Learning Engineer</title>
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                        fa: ['Vazirmatn', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            base: '#030712', surface: '#0f172a', border: 'rgba(255,255,255,0.06)'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'float': 'float 8s ease-in-out infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(40px) scale(0.98)' }, '100%': { opacity: '1', transform: 'translateY(0) scale(1)' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --brand-primary: #14b8a6; /* Default Emerald Teal */
+            --brand-secondary: #0d9488;
+            --brand-glow: rgba(20, 184, 166, 0.15);
+        }
+
+        body {
+            background-color: theme('colors.dark.base');
+            color: #f8fafc;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Cinematic Noise Overlay */
+        .noise-bg {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.18;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Interactive Canvas Neural Net */
+        #neural-canvas {
+            position: fixed; inset: 0; z-index: -2; pointer-events: auto;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--brand-primary); }
+
+        /* The Resume Document */
+        .resume-page {
+            width: 100%; max-width: 210mm; min-height: 297mm;
+            background: #ffffff; display: grid; grid-template-columns: 1fr;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 40px 80px -20px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        @media (min-width: 1024px) { .resume-page { grid-template-columns: 32% 68%; } }
+
+        /* Subtle Paper Texture for main content */
+        .main-content {
+            background-color: #ffffff; padding: 50px 45px; color: #334155; position: relative;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            background: linear-gradient(170deg, #090d16 0%, #03060d 100%);
+            color: #e2e8f0; padding: 45px 32px; position: relative; z-index: 1;
+            border-right: 1px solid rgba(0,0,0,0.15);
+        }
+        
+        .profile-container { position: relative; display: inline-block; margin-bottom: 2rem; }
+        .profile-avatar {
+            width: 130px; height: 130px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--brand-primary), #2563eb, var(--brand-secondary));
+            background-size: 200% 200%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 44px; font-weight: 800; color: white;
+            position: relative; z-index: 2;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 15px 35px -5px var(--brand-glow);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .profile-avatar:hover { transform: scale(1.06) rotate(-3deg); box-shadow: 0 25px 50px -10px var(--brand-glow); background-position: right center; }
+        .profile-ring {
+            position: absolute; inset: -8px; border-radius: 50%; border: 1px dashed var(--brand-primary);
+            z-index: 1; pointer-events: none; opacity: 0.6;
+        }
+
+        .sidebar-section-title {
+            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 800;
+            color: #94a3b8; text-transform: uppercase; letter-spacing: 2.5px;
+            margin-bottom: 22px; display: flex; align-items: center; gap: 12px;
+        }
+        .sidebar-section-title::after {
+            content: ''; flex: 1; height: 1px; background: linear-gradient(to right, rgba(148, 163, 184, 0.12), transparent);
+        }
+
+        .contact-item { display: flex; align-items: center; gap: 14px; font-size: 11.5px; font-weight: 400; color: #cbd5e1; margin-bottom: 16px; transition: transform 0.2s; }
+        .contact-item:hover { transform: translateX(4px); color: white; }
+        .contact-item i {
+            width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
+            border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; color: var(--brand-primary); font-size: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+        }
+        
+        .skill-pill {
+            background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05);
+            padding: 5px 11px; border-radius: 8px; font-size: 10.5px; font-weight: 500; color: #cbd5e1;
+            transition: all 0.3s ease; backdrop-filter: blur(4px);
+        }
+        .skill-pill:hover { background: rgba(20, 184, 166, 0.1); border-color: var(--brand-primary); color: white; transform: translateY(-2px); }
+        .skill-pill.highlight { background: rgba(20, 184, 166, 0.08); border-color: rgba(20, 184, 166, 0.25); color: var(--brand-primary); }
+
+        /* --- MAIN CONTENT TYPOGRAPHY --- */
+        .header-name {
+            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 45px; font-weight: 800;
+            background: linear-gradient(135deg, #090d16 0%, #334155 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 6px;
+        }
+        .header-role {
+            font-size: 17px; font-weight: 600; color: var(--brand-secondary); margin-bottom: 24px; display: inline-block;
+            letter-spacing: 0.5px;
+        }
+        
+        .timeline-section-title {
+            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; color: #090d16;
+            display: flex; align-items: center; gap: 12px; margin-bottom: 28px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;
+        }
+        .timeline-section-title i { color: var(--brand-secondary); font-size: 15px; }
+
+        .project-card { position: relative; padding-left: 24px; margin-bottom: 30px; }
+        .project-card::before { content: ''; position: absolute; left: 0; top: 6px; bottom: -30px; width: 2px; background: #e2e8f0; }
+        .project-card:last-child::before { display: none; }
+        .project-dot {
+            position: absolute; left: -4px; top: 6px; width: 10px; height: 10px;
+            background: #ffffff; border: 2px solid var(--brand-secondary); border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1); transition: all 0.3s;
+        }
+        .project-card:hover .project-dot { background: var(--brand-secondary); transform: scale(1.2); box-shadow: 0 0 0 6px var(--brand-glow); }
+
+        .tech-stack span {
+            font-size: 9.5px; font-weight: 600; color: #475569; background: #f8fafc; border: 1px solid #e2e8f0;
+            padding: 2px 9px; border-radius: 12px; display: inline-block; margin-right: 5px; margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+
+        /* Masterpiece Bento Grid */
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+        .bento-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between; z-index: 1;
+        }
+        .bento-card::before {
+            content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--brand-glow), transparent);
+            opacity: 0; transition: opacity 0.4s; z-index: -1;
+        }
+        .bento-card:hover { transform: translateY(-4px); border-color: var(--brand-primary); box-shadow: 0 15px 30px -10px var(--brand-glow); }
+        .bento-card:hover::before { opacity: 1; }
+
+        /* --- ULTRA GLASSMORPHISM (COPILOT) --- */
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(10, 15, 30, 0.7) 0%, rgba(3, 5, 12, 0.85) 100%);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top-color: rgba(255, 255, 255, 0.12); border-left-color: rgba(255, 255, 255, 0.12);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.05), 0 30px 60px -15px rgba(0,0,0,0.9), 0 0 40px var(--brand-glow);
+        }
+        
+        .nav-tab { transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .nav-tab::before {
+            content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.03);
+            transform: translateY(100%); transition: transform 0.3s ease; z-index: -1;
+        }
+        .nav-tab:hover::before { transform: translateY(0); }
+        .nav-tab.active { color: white; font-weight: 700; background: rgba(255,255,255,0.02); }
+        .nav-tab.active::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--brand-primary), transparent); box-shadow: 0 -2px 10px var(--brand-primary);
+        }
+
+        /* Chat Bubbles Upgrade */
+        .chat-bubble-user {
+            background: linear-gradient(135deg, var(--brand-secondary), #0f766e);
+            box-shadow: 0 10px 25px -5px var(--brand-glow), inset 0 1px 1px rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .chat-bubble-ai {
+            background: rgba(255,255,255,0.02); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        }
+
+        /* Input Premium Feel */
+        .premium-input-container {
+            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.6); transition: all 0.3s;
+        }
+        .premium-input-container:focus-within {
+            border-color: var(--brand-primary); box-shadow: inset 0 2px 10px rgba(0,0,0,0.6), 0 0 15px var(--brand-glow);
+        }
+
+        /* Floating macOS Style Dock */
+        .floating-dock {
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 15, 30, 0.65); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-top-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px; border-radius: 24px; display: flex; gap: 10px; z-index: 100;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+        }
+        .dock-btn {
+            width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            color: #cbd5e1; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .dock-btn:hover { background: rgba(255,255,255,0.12); color: white; transform: translateY(-8px) scale(1.1); }
+        .dock-btn.primary { background: linear-gradient(135deg, var(--brand-secondary), #2563eb); color: white; border: none; }
+        .dock-btn.primary:hover { box-shadow: 0 10px 25px var(--brand-glow); }
+        
+        .dock-tooltip {
+            position: absolute; top: -45px; background: rgba(10, 15, 30, 0.95); backdrop-filter: blur(10px);
+            color: white; font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 8px;
+            opacity: 0; pointer-events: none; transition: all 0.2s; transform: translateY(10px) scale(0.9);
+            white-space: nowrap; border: 1px solid rgba(255,255,255,0.08);
+        }
+        .dock-btn:hover .dock-tooltip { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* Drawer / Case Studies Panel */
+        .drawer-overlay {
+            position: fixed; inset: 0; z-index: 1000; background: rgba(3, 5, 12, 0.7);
+            backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .drawer-overlay.active { opacity: 1; pointer-events: auto; }
+        .drawer-panel {
+            position: fixed; top: 0; right: -100%; width: 100%; max-width: 550px; height: 100%;
+            background: #090e1a; border-left: 1px solid rgba(255,255,255,0.08); z-index: 1001;
+            box-shadow: -25px 0 50px -12px rgba(0,0,0,0.8); transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column;
+        }
+        .drawer-overlay.active .drawer-panel { right: 0; }
+
+        /* Custom editing overlay class for visual editor */
+        body.edit-mode-active [data-editable="true"] {
+            outline: 2px dashed var(--brand-primary) !important;
+            outline-offset: 4px;
+            background-color: rgba(20, 184, 166, 0.04);
+            cursor: text;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        /* Custom styling for Vazirmatn switch */
+        .font-fa {
+            font-family: 'Vazirmatn', sans-serif !important;
+        }
+
+        /* Edit Controls Visibility styling */
+        .edit-only {
+            display: none !important;
+        }
+        body.edit-mode-active .edit-only {
+            display: inline-flex !important;
+        }
+
+        /* Print CSS - Pristine and clean */
+        @media print {
+            @page { margin: 0; size: A4; }
+            body { background: white !important; padding: 0 !important; margin: 0 !important; color: black !important; }
+            .no-print, #neural-canvas, .noise-bg, .floating-dock { display: none !important; }
+            #main-layout { display: block !important; }
+            .resume-page {
+                box-shadow: none !important; width: 210mm !important; min-height: 297mm !important;
+                margin: 0 auto !important; border: none !important; grid-template-columns: 32% 68% !important; transform: none !important; position: static !important;
+            }
+            .sidebar { background: #f8fafc !important; color: #1e293b !important; border-right: 1px solid #e2e8f0 !important; padding: 40px 20px !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .profile-avatar { background: #090d16 !important; color: white !important; box-shadow: none !important; width: 110px !important; height: 110px !important; font-size: 36px !important; }
+            .profile-ring { display: none !important; }
+            .sidebar-section-title { color: #475569 !important; border-bottom: 1px solid #cbd5e1 !important; }
+            .sidebar-section-title::after { display: none !important; }
+            .contact-item { color: #334155 !important; }
+            .contact-item i { background: transparent !important; color: var(--brand-secondary) !important; border: none !important; box-shadow: none !important; }
+            .skill-pill { background: #e2e8f0 !important; color: #090d16 !important; border: 1px solid #cbd5e1 !important; }
+            .skill-pill.highlight { background: #ccfbf1 !important; color: #090d16 !important; border: 1px solid #5eead4 !important; }
+            .main-content { background: white !important; padding: 40px !important; }
+            .header-name { background: none !important; -webkit-text-fill-color: #090d16 !important; color: #090d16 !important; }
+            .bento-card { border: 1px solid #cbd5e1 !important; box-shadow: none !important; break-inside: avoid; }
+        }
+
+        /* Custom color matrices */
+        .color-emerald { --brand-primary: #14b8a6; --brand-secondary: #0d9488; --brand-glow: rgba(20, 184, 166, 0.15); }
+        .color-sapphire { --brand-primary: #3b82f6; --brand-secondary: #2563eb; --brand-glow: rgba(59, 130, 246, 0.15); }
+        .color-ruby { --brand-primary: #ef4444; --brand-secondary: #dc2626; --brand-glow: rgba(239, 68, 68, 0.15); }
+        .color-amethyst { --brand-primary: #a855f7; --brand-secondary: #9333ea; --brand-glow: rgba(168, 85, 247, 0.15); }
+        .color-amber { --brand-primary: #f59e0b; --brand-secondary: #d97706; --brand-glow: rgba(245, 158, 11, 0.15); }
+    </style>
+</head>
+
+<body class="p-0 xl:p-8 flex flex-col items-center min-h-screen color-emerald transition-colors duration-500">
+
+    <div class="noise-bg"></div>
+    <canvas id="neural-canvas"></canvas>
+
+    <!-- Top Universal Navigation Bar (Bilingual Switcher) -->
+    <header class="w-full max-w-[1550px] mb-6 px-4 xl:px-0 flex justify-between items-center no-print z-50">
+        <div class="flex items-center gap-3">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <span class="font-mono text-xs font-bold tracking-widest text-slate-400 uppercase hidden sm:inline-block">Status: Core System Active</span>
+        </div>
+        
+        <!-- Premium Translation Swapper Button -->
+        <button onclick="toggleLanguage()" class="bg-slate-900/80 hover:bg-slate-850 border border-white/10 px-5 py-2.5 rounded-full text-xs font-bold tracking-wider hover:border-teal-500/50 transition-all flex items-center gap-2 shadow-lg backdrop-blur-md">
+            <i class="fa-solid fa-language text-brand-primary text-sm animate-pulse"></i>
+            <span id="lang-btn-text">FA / فارسی</span>
+        </button>
+    </header>
+
+    <div id="main-layout" class="flex flex-col xl:flex-row gap-10 max-w-[1550px] w-full justify-center items-stretch my-0 xl:my-4 z-10 relative animate-fade-in">
+        
+        <!-- ================= LEFT: PREMIUM RESUME ================= -->
+        <div class="flex flex-col items-center flex-shrink-0 lg:w-auto w-full animate-slide-up">
+            
+            <!-- 1. ENGLISH PORTFOLIO CARD -->
+            <div id="portfolio-en" class="resume-page rounded-none xl:rounded-3xl overflow-hidden shadow-2xl">
+                
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="flex flex-col items-center mb-12">
+                        <div class="profile-container">
+                            <div class="profile-ring animate-spin-slow"></div>
+                            <div class="profile-avatar mb-2 cursor-pointer select-none" onclick="handleAvatarClick()" title="Double-click for Admin Access">PB</div>
+                        </div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="mb-12">
+                        <h3 class="sidebar-section-title">Contact</h3>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-mobile-screen"></i> <span data-editable="true">+98 902 453 6693</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-envelope"></i> <span data-editable="true">pouyabarani27@gmail.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-location-dot"></i> <span data-editable="true">Isfahan, Iran</span>
+                        </div>
+                        <div class="contact-item cursor-pointer" onclick="window.open('https://linkedin.com/in/pouya-barani', '_blank')">
+                            <i class="fa-brands fa-linkedin-in"></i> <span data-editable="true">linkedin.com/in/pouya-barani</span>
+                        </div>
+                        <div class="contact-item cursor-pointer" onclick="window.open('https://github.com/pouyabarani', '_blank')">
+                            <i class="fa-brands fa-github"></i> <span data-editable="true">github.com/pouyabarani</span>
+                        </div>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="mb-12">
+                        <h3 class="sidebar-section-title">Education</h3>
+                        <div class="text-[12px] group">
+                            <strong class="text-white print:text-slate-900 block text-[13.5px] font-heading font-bold mb-1 transition-colors group-hover:text-brand-400" data-editable="true">B.Sc. Biomedical Engineering</strong>
+                            <div class="text-slate-300 print:text-slate-700" data-editable="true">University Of Isfahan</div>
+                            <span class="block text-brand-500 print:text-brand-600 text-[11px] mt-1 font-semibold tracking-wide" data-editable="true">Expected: 2027</span>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div>
+                        <h3 class="sidebar-section-title">Technical Skills</h3>
+                        
+                        <div class="mb-6">
+                            <div class="text-[10px] font-bold text-slate-400 print:text-slate-500 mb-3 uppercase tracking-widest">AI & Data Science</div>
+                            <div class="flex flex-wrap gap-2" id="skills-en-ai">
+                                <span class="skill-pill highlight relative group">
+                                    <span data-editable="true">Computer Vision</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                                <span class="skill-pill highlight relative group">
+                                    <span data-editable="true">PyTorch</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">TensorFlow / Keras</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">Scikit-learn</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">Pandas / NumPy</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                            </div>
+                            <button class="edit-only mt-2 text-[10px] bg-teal-500/20 text-teal-400 hover:bg-teal-500 hover:text-white px-2 py-1 rounded transition-all font-bold" onclick="addNewSkill('en-ai')">+ Add Skill</button>
+                        </div>
+
+                        <div>
+                            <div class="text-[10px] font-bold text-slate-400 print:text-slate-500 mb-3 uppercase tracking-widest">Engineering & Tools</div>
+                            <div class="flex flex-wrap gap-2" id="skills-en-tools">
+                                <span class="skill-pill highlight relative group">
+                                    <span data-editable="true">Python</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">C++</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">OpenCV</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">Git</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">Docker</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('Skill removed');">×</button>
+                                </span>
+                            </div>
+                            <button class="edit-only mt-2 text-[10px] bg-teal-500/20 text-teal-400 hover:bg-teal-500 hover:text-white px-2 py-1 rounded transition-all font-bold" onclick="addNewSkill('en-tools')">+ Add Tool</button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="main-content">
+                    <header class="mb-10 border-b border-slate-200 pb-10">
+                        <h1 class="header-name" data-editable="true">Pouya Barani</h1>
+                        <h2 class="header-role" data-editable="true">Machine Learning & Vision Engineer</h2>
+                        
+                        <p class="text-[13px] leading-relaxed text-slate-600 text-justify" data-editable="true">
+                            Driven Machine Learning Engineer with a solid academic foundation in Biomedical Engineering. Specializing in computer vision, deep learning, and medical image processing. Passionate about leveraging AI to solve complex real-world healthcare problems, designing end-to-end robust pipelines, and deploying highly accurate predictive models into production environments.
+                        </p>
+                    </header>
+
+                    <!-- Projects Section -->
+                    <section class="mb-10">
+                        <h2 class="timeline-section-title"><i class="fa-solid fa-layer-group"></i> Featured Projects</h2>
+
+                        <div id="projects-list-en" class="space-y-4">
+                            <div class="project-card group relative">
+                                <button class="edit-only absolute top-0 right-0 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('Project removed');">×</button>
+                                <div class="project-dot"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-heading font-extrabold text-[15.5px] text-slate-900 tracking-tight group-hover:text-brand-secondary transition-colors cursor-pointer" onclick="openDrawer('brain')" data-editable="true">Brain Tumor Segmentation Framework</h3>
+                                    <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true">2023</span>
+                                </div>
+                                <div class="tech-stack">
+                                    <span>PyTorch</span> <span>U-Net</span> <span>OpenCV</span>
+                                </div>
+                                <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2" data-editable="true">Engineered an advanced deep learning pipeline based on optimized U-Net architectures to precisely segment brain tumors from multi-modal MRI scans.</p>
+                                
+                                <!-- Interactive Actions for ML Sandbox & Cases -->
+                                <div class="flex gap-3 mt-3 no-print">
+                                    <button onclick="openDrawer('brain')" class="text-[11px] font-bold text-brand-secondary hover:text-brand-primary flex items-center gap-1.5 transition-colors">
+                                        <i class="fa-solid fa-square-poll-vertical"></i> View Architecture & Metrics
+                                    </button>
+                                    <button onclick="openMLSandbox()" class="text-[11px] font-bold text-blue-600 hover:text-blue-500 flex items-center gap-1.5 transition-colors bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">
+                                        <i class="fa-solid fa-flask-pulse animate-pulse"></i> Run Interactive ML Demo
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="project-card group relative">
+                                <button class="edit-only absolute top-0 right-0 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('Project removed');">×</button>
+                                <div class="project-dot"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-heading font-extrabold text-[15.5px] text-slate-900 tracking-tight group-hover:text-brand-secondary transition-colors cursor-pointer" onclick="openDrawer('xray')" data-editable="true">Automated Chest X-Ray Diagnostics</h3>
+                                    <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true">2023</span>
+                                </div>
+                                <div class="tech-stack">
+                                    <span>TensorFlow</span> <span>ResNet50</span> <span>Grad-CAM</span>
+                                </div>
+                                <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2" data-editable="true">Designed high-performance Convolutional Neural Networks (CNNs) utilizing transfer learning to detect pneumonia and anomalies in large-scale X-ray datasets.</p>
+                                
+                                <div class="flex gap-3 mt-3 no-print">
+                                    <button onclick="openDrawer('xray')" class="text-[11px] font-bold text-brand-secondary hover:text-brand-primary flex items-center gap-1.5 transition-colors">
+                                        <i class="fa-solid fa-square-poll-vertical"></i> View Architecture & Metrics
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="edit-only mt-4 w-full border-2 border-dashed border-teal-500/30 hover:border-brand-primary text-teal-400 hover:text-white rounded-xl py-2.5 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 bg-teal-500/5 hover:bg-teal-500/10" onclick="addNewProject('en')">
+                            <i class="fa-solid fa-plus"></i> Add New Featured Project
+                        </button>
+                    </section>
+
+                    <!-- Executive & Leadership History Section (EN) -->
+                    <section class="mb-10">
+                        <h2 class="timeline-section-title"><i class="fa-solid fa-briefcase"></i> Executive & Leadership History</h2>
+                        
+                        <div class="space-y-4" id="executive-list-en">
+                            <div class="project-card group relative">
+                                <button class="edit-only absolute top-0 right-0 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('Role removed');">×</button>
+                                <div class="project-dot"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-heading font-extrabold text-[15.5px] text-slate-900 tracking-tight" data-editable="true">Director & Media Manager (Editor-in-Chief)</h3>
+                                    <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true">2024 - 2025</span>
+                                </div>
+                                <p class="text-[12px] font-bold text-brand-secondary mb-1" data-editable="true">Neuron Media | Scientific Associations Office (University of Isfahan)</p>
+                                <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2" data-editable="true">Officially appointed to manage scientific communication networks, interactive medical newsletters, and technical outreach mediums for student-led bio-societies.</p>
+                                <span class="inline-block text-[10px] text-slate-400 bg-slate-50 border border-slate-200/60 px-2 py-0.5 rounded font-mono" dir="ltr" data-editable="true">Ref: 105993/1404 | Authorized by Dr. Reza Ramezani</span>
+                            </div>
+
+                            <div class="project-card group relative">
+                                <button class="edit-only absolute top-0 right-0 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('Role removed');">×</button>
+                                <div class="project-dot"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-heading font-extrabold text-[15.5px] text-slate-900 tracking-tight" data-editable="true">Active Executive Member</h3>
+                                    <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true">2024 - 2025</span>
+                                </div>
+                                <p class="text-[12px] font-bold text-brand-secondary mb-1" data-editable="true">Biomedical Engineering Scientific Association</p>
+                                <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2" data-editable="true">Organized state-level academic events, computational healthcare workshops, and deep learning engineering summits in collaboration with student-led academic sectors.</p>
+                                <span class="inline-block text-[10px] text-slate-400 bg-slate-50 border border-slate-200/60 px-2 py-0.5 rounded font-mono" dir="ltr" data-editable="true">Ref: 153804/1404 | Authorized by Student Societies Board</span>
+                            </div>
+                        </div>
+
+                        <button class="edit-only mt-4 w-full border-2 border-dashed border-teal-500/30 hover:border-brand-primary text-teal-400 hover:text-white rounded-xl py-2.5 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 bg-teal-500/5 hover:bg-teal-500/10" onclick="addNewExecutive('en')">
+                            <i class="fa-solid fa-plus"></i> Add New Leadership Role
+                        </button>
+                    </section>
+
+                    <!-- Certifications Section -->
+                    <section>
+                        <h2 class="timeline-section-title"><i class="fa-solid fa-certificate"></i> Verified Credentials</h2>
+                        
+                        <div class="bento-grid" id="cert-grid-en">
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/gX8kVjjB.jpg')">
+                                <button class="edit-only absolute top-2 right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('Card removed');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors" data-editable="true">Computer Vision</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500"></i> Kaggle</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/RWB1KJ0s.jpg')">
+                                <button class="edit-only absolute top-2 right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('Card removed');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors" data-editable="true">Data Science</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-solid fa-laptop-code text-indigo-500"></i> HP Life</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/mz2FVQxY.jpg')">
+                                <button class="edit-only absolute top-2 right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('Card removed');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors" data-editable="true">Deep Learning</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500"></i> Kaggle</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/HrRSqkW2.jpg')">
+                                <button class="edit-only absolute top-2 right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('Card removed');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors" data-editable="true">Intermediate ML</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500"></i> Kaggle</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/Yv3VTHG1.jpg')">
+                                <button class="edit-only absolute top-2 right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('Card removed');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors" data-editable="true">Feature Engineering</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500"></i> Kaggle</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/RW79Fy3J.jpg')">
+                                <button class="edit-only absolute top-2 right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('Card removed');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors" data-editable="true">Data Visualization</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500"></i> Kaggle</span>
+                            </div>
+                        </div>
+
+                        <button class="edit-only mt-4 w-full border-2 border-dashed border-teal-500/30 hover:border-brand-primary text-teal-400 hover:text-white rounded-xl py-2.5 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 bg-teal-500/5 hover:bg-teal-500/10" onclick="addNewCertificate('en')">
+                            <i class="fa-solid fa-plus"></i> Add New Certificate Card
+                        </button>
+                    </section>
+                </main>
+            </div>
+
+
+            <!-- 2. PERSIAN RESUME PORTFOLIO CARD (FA) - INSTANT LOCAL TRANSLATION -->
+            <div id="portfolio-fa" dir="rtl" class="resume-page rounded-none xl:rounded-3xl overflow-hidden shadow-2xl hidden font-fa">
+                
+                <!-- Sidebar (Persian) -->
+                <aside class="sidebar" style="border-right: none; border-left: 1px solid rgba(0,0,0,0.15);">
+                    <div class="flex flex-col items-center mb-12">
+                        <div class="profile-container">
+                            <div class="profile-ring animate-spin-slow"></div>
+                            <div class="profile-avatar mb-2 cursor-pointer select-none" onclick="handleAvatarClick()" title="دو بار کلیک برای دسترسی مدیریت">PB</div>
+                        </div>
+                    </div>
+
+                    <!-- Contact (Persian) -->
+                    <div class="mb-12">
+                        <h3 class="sidebar-section-title" style="letter-spacing: 0px; font-family: 'Vazirmatn', sans-serif;">راه‌های ارتباطی</h3>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-mobile-screen"></i> <span dir="ltr" data-editable="true">+98 902 453 6693</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-envelope"></i> <span data-editable="true">pouyabarani27@gmail.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-location-dot"></i> <span data-editable="true">اصفهان، ایران</span>
+                        </div>
+                        <div class="contact-item cursor-pointer" onclick="window.open('https://linkedin.com/in/pouya-barani', '_blank')">
+                            <i class="fa-brands fa-linkedin-in"></i> <span data-editable="true">linkedin.com/in/pouya-barani</span>
+                        </div>
+                        <div class="contact-item cursor-pointer" onclick="window.open('https://github.com/pouyabarani', '_blank')">
+                            <i class="fa-brands fa-github"></i> <span data-editable="true">github.com/pouyabarani</span>
+                        </div>
+                    </div>
+
+                    <!-- Education (Persian) -->
+                    <div class="mb-12">
+                        <h3 class="sidebar-section-title" style="letter-spacing: 0px; font-family: 'Vazirmatn', sans-serif;">تحصیلات آکادمیک</h3>
+                        <div class="text-[12px] group">
+                            <strong class="text-white print:text-slate-900 block text-[13.5px] font-bold mb-1 transition-colors group-hover:text-brand-400" data-editable="true">کارشناسی مهندسی پزشکی</strong>
+                            <div class="text-slate-300 print:text-slate-700" data-editable="true">دانشگاه اصفهان</div>
+                            <span class="block text-brand-500 print:text-brand-600 text-[11px] mt-1 font-semibold tracking-wide" data-editable="true">سال فارغ‌التحصیلی مورد انتظار: ۱۴۰۶</span>
+                        </div>
+                    </div>
+
+                    <!-- Skills (Persian) -->
+                    <div>
+                        <h3 class="sidebar-section-title" style="letter-spacing: 0px; font-family: 'Vazirmatn', sans-serif;">مهارت‌های فنی</h3>
+                        
+                        <div class="mb-6">
+                            <div class="text-[10px] font-bold text-slate-400 print:text-slate-500 mb-3 uppercase tracking-widest">هوش مصنوعی و علم داده</div>
+                            <div class="flex flex-wrap gap-2" id="skills-fa-ai">
+                                <span class="skill-pill highlight relative group">
+                                    <span data-editable="true">بینایی ماشین</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                                <span class="skill-pill highlight relative group">
+                                    <span data-editable="true">PyTorch</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">TensorFlow / Keras</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">Scikit-learn</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">Pandas / NumPy</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                            </div>
+                            <button class="edit-only mt-2 text-[10px] bg-teal-500/20 text-teal-400 hover:bg-teal-500 hover:text-white px-2 py-1 rounded transition-all font-bold" onclick="addNewSkill('fa-ai')">+ افزودن مهارت</button>
+                        </div>
+
+                        <div>
+                            <div class="text-[10px] font-bold text-slate-400 print:text-slate-500 mb-3 uppercase tracking-widest">ابزارها و مهندسی</div>
+                            <div class="flex flex-wrap gap-2" id="skills-fa-tools">
+                                <span class="skill-pill highlight relative group">
+                                    <span data-editable="true">پایتون</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">C++</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">OpenCV</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">Git / CI-CD</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                                <span class="skill-pill relative group">
+                                    <span data-editable="true">Docker</span>
+                                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('مهارت حذف شد');">×</button>
+                                </span>
+                            </div>
+                            <button class="edit-only mt-2 text-[10px] bg-teal-500/20 text-teal-400 hover:bg-teal-500 hover:text-white px-2 py-1 rounded transition-all font-bold" onclick="addNewSkill('fa-tools')">+ افزودن ابزار</button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content (Persian) -->
+                <main class="main-content">
+                    <header class="mb-10 border-b border-slate-200 pb-10">
+                        <h1 class="header-name text-4xl font-extrabold mb-2" data-editable="true">پویا بارانی</h1>
+                        <h2 class="header-role text-[15px]" data-editable="true">مهندس یادگیری ماشین و بینایی ماشین (ML Engineer)</h2>
+                        
+                        <p class="text-[13px] leading-relaxed text-slate-600 text-justify font-fa" data-editable="true">
+                            مهندس پرانگیزه یادگیری ماشین با دانش تخصصی آکادمیک در حوزه مهندسی پزشکی. متخصص در پیاده‌سازی سیستم‌های بینایی ماشین، یادگیری عمیق و پردازش تصاویر تشخیصی. علاقه‌مند به توسعه پلتفرم‌های کاربردی هوش مصنوعی در سلامت، طراحی خطوط لوله محاسباتی پایدار و استقرار مدل‌های هوشمند و دقیق کلاسیفیکیشن و سگمنتیشن در محیط‌های عملیاتی.
+                        </p>
+                    </header>
+
+                    <!-- Projects Section (Persian) -->
+                    <section class="mb-10">
+                        <h2 class="timeline-section-title" style="font-family: 'Vazirmatn', sans-serif;"><i class="fa-solid fa-layer-group ml-2"></i> پروژه‌های شاخص هوش مصنوعی</h2>
+
+                        <div id="projects-list-fa" class="space-y-4">
+                            <div class="project-card group relative" style="padding-left: 0; padding-right: 24px;">
+                                <button class="edit-only absolute top-0 left-0 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('پروژه حذف شد');">×</button>
+                                <div class="project-dot" style="left: auto; right: -4px;"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-[15.5px] text-slate-900 tracking-tight group-hover:text-brand-secondary transition-colors cursor-pointer" onclick="openDrawer('brain')" data-editable="true">فریم‌ورک خودکار بخش‌بندی تومورهای مغزی (MRI)</h3>
+                                    <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true">۱۴۰۲</span>
+                                </div>
+                                <div class="tech-stack">
+                                    <span>PyTorch</span> <span>U-Net</span> <span>OpenCV</span>
+                                </div>
+                                <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2" data-editable="true">طراحی و پیاده‌سازی معماری شبکه عصبی عمیق بهینه‌شده مبتنی بر معماری‌های پیشرفته U-Net جهت ترسیم دقیق و تفکیک خودکار نواحی تومور از اسکن‌های چندوجهی MRI.</p>
+                                
+                                <!-- Interactive Actions for ML Sandbox & Cases (Persian) -->
+                                <div class="flex gap-3 mt-3 no-print">
+                                    <button onclick="openDrawer('brain')" class="text-[11px] font-bold text-brand-secondary hover:text-brand-primary flex items-center gap-1.5 transition-colors">
+                                        <i class="fa-solid fa-square-poll-vertical"></i> مشاهده معماری و سنجه‌های ارزیابی
+                                    </button>
+                                    <button onclick="openMLSandbox()" class="text-[11px] font-bold text-blue-600 hover:text-blue-500 flex items-center gap-1.5 transition-colors bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">
+                                        <i class="fa-solid fa-flask-pulse animate-pulse"></i> اجرای کارگاه استنتاج زنده (دِمو)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="project-card group relative" style="padding-left: 0; padding-right: 24px;">
+                                <button class="edit-only absolute top-0 left-0 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('پروژه حذف شد');">×</button>
+                                <div class="project-dot" style="left: auto; right: -4px;"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-[15.5px] text-slate-900 tracking-tight group-hover:text-brand-secondary transition-colors cursor-pointer" onclick="openDrawer('xray')" data-editable="true">سیستم هوشمند تشخیص خودکار اسکن‌های قفسه سینه (X-Ray)</h3>
+                                    <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true">۱۴۰۲</span>
+                                </div>
+                                <div class="tech-stack">
+                                    <span>TensorFlow</span> <span>ResNet50</span> <span>Grad-CAM</span>
+                                </div>
+                                <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2" data-editable="true">طراحی شبکه پیشرفته‌ی کانولوشنال عمیق (CNN) با بکارگیری فرآیند انتقال دانش (Transfer Learning) جهت پردازش حجم انبوه تصاویر و غربالگری دقیق بیماری ذات‌الریه و سایر پاتولوژی‌ها.</p>
+                                
+                                <div class="flex gap-3 mt-3 no-print">
+                                    <button onclick="openDrawer('xray')" class="text-[11px] font-bold text-brand-secondary hover:text-brand-primary flex items-center gap-1.5 transition-colors">
+                                        <i class="fa-solid fa-square-poll-vertical"></i> مشاهده معماری و سنجه‌های ارزیابی
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="edit-only mt-4 w-full border-2 border-dashed border-teal-500/30 hover:border-brand-primary text-teal-400 hover:text-white rounded-xl py-2.5 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 bg-teal-500/5 hover:bg-teal-500/10 font-fa" onclick="addNewProject('fa')">
+                            <i class="fa-solid fa-plus"></i> افزودن پروژه جدید
+                        </button>
+                    </section>
+
+                    <!-- Executive & Leadership History Section (Persian) -->
+                    <section class="mb-10">
+                        <h2 class="timeline-section-title" style="font-family: 'Vazirmatn', sans-serif;"><i class="fa-solid fa-briefcase ml-2"></i> سوابق اجرایی و مدیریتی رسمی</h2>
+                        
+                        <div class="space-y-4" id="executive-list-fa">
+                            <div class="project-card group relative" style="padding-left: 0; padding-right: 24px;">
+                                <button class="edit-only absolute top-0 left-0 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('کارت سوابق حذف شد');">×</button>
+                                <div class="project-dot" style="left: auto; right: -4px;"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-[15.5px] text-slate-900 tracking-tight" data-editable="true">مدیر و مسئول رسانه (سردبیر رسانه علمی-پژوهشی نورون)</h3>
+                                    <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true">۱۴۰۳ - ۱۴۰۴</span>
+                                </div>
+                                <p class="text-[12px] font-bold text-brand-secondary mb-1" data-editable="true">رسانه علمی-پژوهشی نورون | دفتر انجمن‌های علمی دانشگاه اصفهان</p>
+                                <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2 font-fa" data-editable="true">مدیریت رسمی درگاه‌ها و رسانه‌های ارتباط علمی، نظارت بر انتشارات پلتفرم‌های دیجیتال، خبرنامه‌های اینتراکتیو سلامت و مهندسی زیستی دانشجویی.</p>
+                                <span class="inline-block text-[10px] text-slate-400 bg-slate-50 border border-slate-200/60 px-2 py-0.5 rounded font-mono" dir="ltr" data-editable="true">Ref: 105993/1404 | Authorized by Dr. Reza Ramezani</span>
+                            </div>
+
+                            <div class="project-card group relative" style="padding-left: 0; padding-right: 24px;">
+                                <button class="edit-only absolute top-0 left-0 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('کارت سوابق حذف شد');">×</button>
+                                <div class="project-dot" style="left: auto; right: -4px;"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-[15.5px] text-slate-900 tracking-tight" data-editable="true">عضو فعال شورای مرکزی</h3>
+                                    <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true">۱۴۰۳ - ۱۴۰۴</span>
+                                </div>
+                                <p class="text-[12px] font-bold text-brand-secondary mb-1" data-editable="true">انجمن علمی مهندسی پزشکی دانشگاه اصفهان</p>
+                                <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2 font-fa" data-editable="true">برنامه‌ریزی، مدیریت و اجرای سمپوزیوم‌های تخصصی، وبینارهای ملی هوش مصنوعی در پزشکی و کارگاه‌های فشرده پایتون با تایید مراجع دانشگاهی مربوطه.</p>
+                                <span class="inline-block text-[10px] text-slate-400 bg-slate-50 border border-slate-200/60 px-2 py-0.5 rounded font-mono" dir="ltr" data-editable="true">Ref: 153804/1404 | Authorized by Student Societies Board</span>
+                            </div>
+                        </div>
+
+                        <button class="edit-only mt-4 w-full border-2 border-dashed border-teal-500/30 hover:border-brand-primary text-teal-400 hover:text-white rounded-xl py-2.5 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 bg-teal-500/5 hover:bg-teal-500/10 font-fa" onclick="addNewExecutive('fa')">
+                            <i class="fa-solid fa-plus"></i> افزودن نقش اجرایی جدید
+                        </button>
+                    </section>
+
+                    <!-- Certifications Section (Persian) -->
+                    <section>
+                        <h2 class="timeline-section-title" style="font-family: 'Vazirmatn', sans-serif;"><i class="fa-solid fa-certificate ml-2"></i> گواهینامه‌ها و مدارک تاییدشده</h2>
+                        
+                        <div class="bento-grid" id="cert-grid-fa">
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/gX8kVjjB.jpg')">
+                                <button class="edit-only absolute top-2 left-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('مدرک حذف شد');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors">بینایی ماشین (Computer Vision)</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500 ml-1"></i> Kaggle</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/RWB1KJ0s.jpg')">
+                                <button class="edit-only absolute top-2 left-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('مدرک حذف شد');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors">علم داده (Data Science)</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-solid fa-laptop-code text-indigo-500 ml-1"></i> HP Life</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/mz2FVQxY.jpg')">
+                                <button class="edit-only absolute top-2 left-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('مدرک حذف شد');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors">یادگیری عمیق (Deep Learning)</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500 ml-1"></i> Kaggle</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/HrRSqkW2.jpg')">
+                                <button class="edit-only absolute top-2 left-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('مدرک حذف شد');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors">یادگیری ماشین متوسطه</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500 ml-1"></i> Kaggle</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/Yv3VTHG1.jpg')">
+                                <button class="edit-only absolute top-2 left-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('مدرک حذف شد');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors">مهندسی ویژگی‌ها</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500 ml-1"></i> Kaggle</span>
+                            </div>
+                            <div class="bento-card group cursor-pointer relative" onclick="openCert('https://i.postimg.cc/RW79Fy3J.jpg')">
+                                <button class="edit-only absolute top-2 left-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('مدرک حذف شد');">×</button>
+                                <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors">مصورسازی داده‌ها</h4>
+                                <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1"><i class="fa-brands fa-kaggle text-blue-500 ml-1"></i> Kaggle</span>
+                            </div>
+                        </div>
+
+                        <button class="edit-only mt-4 w-full border-2 border-dashed border-teal-500/30 hover:border-brand-primary text-teal-400 hover:text-white rounded-xl py-2.5 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 bg-teal-500/5 hover:bg-teal-500/10 font-fa" onclick="addNewCertificate('fa')">
+                            <i class="fa-solid fa-plus"></i> افزودن کارت مدرک جدید
+                        </button>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <!-- ================= RIGHT: MASTERPIECE AI COPILOT ================= -->
+        <aside class="no-print flex-1 max-w-full xl:max-w-[430px] glass-panel rounded-[2rem] flex flex-col overflow-hidden self-stretch min-h-[650px] xl:min-h-[750px] relative">
+            
+            <!-- Sleek Header -->
+            <div class="p-5 border-b border-white/5 relative overflow-hidden bg-gradient-to-b from-white/10 to-transparent">
+                <div class="absolute -right-8 -top-8 w-40 h-40 bg-brand-primary/10 blur-[50px] rounded-full pointer-events-none"></div>
+                <div class="flex items-center gap-4 relative z-10">
+                    <div class="w-12 h-12 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl flex items-center justify-center border border-white/20 shadow-lg backdrop-blur-md">
+                        <i class="fa-solid fa-sparkles text-xl bg-gradient-to-br from-teal-300 to-blue-500 bg-clip-text text-transparent drop-shadow-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-extrabold text-[17px] text-white tracking-wide">Recruiter Copilot <span class="ml-1 bg-brand-primary/20 text-brand-primary border border-brand-primary/30 text-[9px] px-2 py-0.5 rounded-full align-middle">PRO</span></h3>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="relative flex h-2 w-2">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            <p class="text-[10px] text-slate-400 font-bold tracking-wider uppercase">AI Agent Active</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modern Tabs -->
+            <div class="flex border-b border-white/5 text-[11px] font-bold tracking-widest uppercase bg-black/20">
+                <button onclick="switchTab('chat')" id="tab-btn-chat" class="nav-tab active flex-1 py-4 text-white"><i class="fa-regular fa-comments mr-1.5"></i> Q&A</button>
+                <button onclick="switchTab('matcher')" id="tab-btn-matcher" class="nav-tab flex-1 py-4 text-slate-400 hover:text-slate-200"><i class="fa-solid fa-crosshairs mr-1.5"></i> Matcher</button>
+                <button onclick="switchTab('outreach')" id="tab-btn-outreach" class="nav-tab flex-1 py-4 text-slate-400 hover:text-slate-200"><i class="fa-solid fa-pen-nib mr-1.5"></i> Email</button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-1 p-5 overflow-y-auto flex flex-col relative bg-gradient-to-b from-transparent to-black/30">
+
+                <!-- TAB 1: Chat -->
+                <div id="tab-content-chat" class="flex-col flex-1 flex h-full">
+                    <div id="chat-box" class="flex-1 overflow-y-auto pr-2 space-y-5 pb-4 custom-scrollbar text-[13px]">
+                        <!-- Initial AI Message -->
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 text-brand-primary border border-white/10 shadow">
+                                <i class="fa-solid fa-robot text-[11px]"></i>
+                            </div>
+                            <div class="chat-bubble-ai p-4 rounded-2xl rounded-tl-sm leading-relaxed text-slate-200">
+                                Hi there! I am Pouya's direct representative Agent. Ask me anything about his technical background!
+                                <div class="mt-3 space-y-2 text-slate-400 ml-1 text-[11.5px] font-medium border-t border-white/10 pt-3">
+                                    <div class="cursor-pointer hover:text-brand-primary transition-all flex items-center gap-1.5" onclick="fillAndSend('What datasets has Pouya worked with?')"><i class="fa-solid fa-chevron-right text-[8px] text-brand-primary"></i> What medical datasets has he used?</div>
+                                    <div class="cursor-pointer hover:text-brand-primary transition-all flex items-center gap-1.5" onclick="fillAndSend('Does he have experience deploying models?')"><i class="fa-solid fa-chevron-right text-[8px] text-brand-primary"></i> Can he deploy models?</div>
+                                    <div class="cursor-pointer hover:text-brand-primary transition-all flex items-center gap-1.5" onclick="fillAndSend('Tell me about his executive and association management roles')"><i class="fa-solid fa-chevron-right text-[8px] text-brand-primary"></i> Executive & Media roles?</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="mt-auto pt-4 relative">
+                        <div class="premium-input-container flex gap-2 p-1.5 rounded-2xl backdrop-blur-xl">
+                            <input type="text" id="chat-input" placeholder="Ask a question..." class="flex-1 bg-transparent text-slate-200 px-4 py-2 text-[12.5px] focus:outline-none placeholder:text-slate-500 font-medium" onkeydown="if(event.key === 'Enter') handleChat()" />
+                            <button onclick="handleChat()" class="bg-gradient-to-r from-brand-secondary to-brand-primary hover:opacity-90 text-white rounded-[12px] w-11 h-11 flex items-center justify-center transition-all shadow-md">
+                                <i class="fa-solid fa-paper-plane text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Job Matcher -->
+                <div id="tab-content-matcher" class="hidden flex-col flex-1 h-full text-[13px]">
+                    <div class="bg-gradient-to-r from-blue-500/10 to-transparent border border-blue-500/20 p-4 rounded-xl mb-4 text-[12px] text-blue-200 leading-relaxed flex items-start gap-2.5 shadow">
+                        <i class="fa-solid fa-bullseye text-blue-400 mt-1"></i>
+                        <span>Drop a Job Description below to run a direct similarity analysis with Pouya's capabilities.</span>
+                    </div>
+                    <textarea id="jd-input" rows="5" placeholder="Paste requirements here..." class="w-full bg-black/40 border border-white/10 text-slate-200 rounded-xl p-4 text-[12.5px] focus:outline-none focus:border-blue-500/50 resize-none mb-3 shadow-inner"></textarea>
+                    
+                    <button onclick="runMatcher()" id="matcher-btn" class="w-full bg-white text-slate-900 hover:bg-slate-150 font-extrabold text-[13px] py-3 rounded-xl transition-all shadow flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-brand-secondary"></i> Compute Alignment
+                    </button>
+
+                    <div id="matcher-results" class="hidden mt-4 bg-white/5 border border-white/10 p-4 rounded-xl flex-col gap-3 shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Alignment Match</span>
+                            <span id="match-percentage" class="text-3xl font-heading font-extrabold bg-gradient-to-r from-brand-primary to-blue-400 bg-clip-text text-transparent">0%</span>
+                        </div>
+                        <div class="w-full bg-black/50 rounded-full h-2.5 overflow-hidden border border-white/5">
+                            <div id="match-bar" class="bg-gradient-to-r from-blue-500 to-brand-primary h-full rounded-full transition-all duration-[2s]" style="width: 0%"></div>
+                        </div>
+                        <div id="matcher-verdict" class="text-[12.5px] text-slate-300 mt-1 leading-relaxed"></div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: Email Drafter -->
+                <div id="tab-content-outreach" class="hidden flex-col flex-1 h-full text-[13px]">
+                    <div class="bg-gradient-to-r from-amber-500/10 to-transparent border border-amber-500/20 p-4 rounded-xl mb-4 text-[12px] text-amber-200 leading-relaxed flex items-start gap-2.5">
+                        <i class="fa-solid fa-envelope-open-text text-amber-400 mt-1"></i>
+                        <span>Generate a direct, highly engaging interview invitation email template to send to Pouya.</span>
+                    </div>
+                    
+                    <button onclick="generateEmail()" id="email-btn" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-95 text-white font-extrabold text-[13px] py-3 rounded-xl transition-all shadow-lg flex justify-center items-center gap-2 mb-3">
+                        <i class="fa-solid fa-pen-fancy"></i> Compose Email Template
+                    </button>
+
+                    <div id="email-result" class="hidden flex-1 flex flex-col">
+                        <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex-1 text-[13px] text-slate-300 leading-relaxed overflow-y-auto custom-scrollbar shadow-inner" id="email-body"></div>
+                        <button onclick="copyToClipboard('email-body')" class="mt-3 w-full bg-white/10 hover:bg-white/15 text-white font-bold text-[12px] py-2.5 rounded-lg transition-all border border-white/10 flex justify-center items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i> Copy Email
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Secure API Key Area -->
+            <div class="px-5 py-3.5 bg-black/60 border-t border-white/5 flex items-center group backdrop-blur-xl z-10">
+                <div class="w-5 h-5 bg-white/5 rounded-full flex items-center justify-center mr-2.5 border border-white/10">
+                    <i class="fa-solid fa-key text-slate-400 text-[9px]"></i>
+                </div>
+                <input type="password" id="api-key" placeholder="Enter Gemini Key to unlock full AI conversational capability..." class="bg-transparent text-slate-300 w-full focus:outline-none focus:text-white text-[11px] tracking-wide font-medium placeholder:text-slate-500" />
+            </div>
+        </aside>
+    </div>
+
+    <!-- macOS Style Floating Quick Action Dock -->
+    <div class="floating-dock no-print shadow-2xl">
+        <button onclick="window.print()" class="dock-btn group">
+            <i class="fa-solid fa-print"></i>
+            <span class="dock-tooltip">Print / Save PDF</span>
+        </button>
+        <a href="mailto:pouyabarani27@gmail.com" class="dock-btn primary group">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span class="dock-tooltip">Email Direct</span>
+        </a>
+        <button onclick="copyToClipboard(null, window.location.href)" class="dock-btn group">
+            <i class="fa-solid fa-link"></i>
+            <span class="dock-tooltip">Copy Portfolio Link</span>
+        </button>
+        <!-- Administrative Panel Action Controls -->
+        <button id="toggle-edit-btn" onclick="toggleEditMode()" class="dock-btn hidden !bg-rose-500/20 !text-rose-400 !border !border-rose-500/50 hover:!bg-rose-500/40">
+            <i id="edit-btn-icon" class="fa-solid fa-pen-nib"></i>
+            <span class="dock-tooltip" id="edit-btn-text">Edit Mode</span>
+        </button>
+        <button id="export-html-btn" onclick="exportHTML()" class="dock-btn edit-only !bg-emerald-500/20 !text-emerald-400 !border !border-emerald-500/50 hover:!bg-emerald-500/40">
+            <i class="fa-solid fa-file-code"></i>
+            <span class="dock-tooltip">Export Clean HTML</span>
+        </button>
+        <div class="h-8 w-[1px] bg-white/10 my-auto mx-1"></div>
+        <!-- Accent Theme Selectors -->
+        <button onclick="changeTheme('emerald')" class="w-5 h-5 rounded-full bg-teal-500 border border-white/20 transition-transform hover:scale-125 focus:outline-none relative group">
+            <span class="absolute top-[-30px] left-1/2 transform -translate-x-1/2 bg-black text-white text-[9px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity font-sans">Teal</span>
+        </button>
+        <button onclick="changeTheme('sapphire')" class="w-5 h-5 rounded-full bg-blue-500 border border-white/20 transition-transform hover:scale-125 focus:outline-none relative group">
+            <span class="absolute top-[-30px] left-1/2 transform -translate-x-1/2 bg-black text-white text-[9px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity font-sans">Blue</span>
+        </button>
+        <button onclick="changeTheme('amethyst')" class="w-5 h-5 rounded-full bg-purple-500 border border-white/20 transition-transform hover:scale-125 focus:outline-none relative group">
+            <span class="absolute top-[-30px] left-1/2 transform -translate-x-1/2 bg-black text-white text-[9px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity font-sans">Purple</span>
+        </button>
+        <button onclick="changeTheme('amber')" class="w-5 h-5 rounded-full bg-amber-500 border border-white/20 transition-transform hover:scale-125 focus:outline-none relative group">
+            <span class="absolute top-[-30px] left-1/2 transform -translate-x-1/2 bg-black text-white text-[9px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity font-sans">Amber</span>
+        </button>
+    </div>
+
+    <!-- Live ML Sandbox Modal -->
+    <div id="ml-sandbox" class="fixed inset-0 z-[1100] bg-black/90 backdrop-blur-xl hidden items-center justify-center p-4 transition-all duration-300">
+        <div class="bg-[#0b1220] border border-white/10 rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 border border-blue-500/30">
+                        <i class="fa-solid fa-flask-pulse"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-heading font-extrabold text-white text-base">Interactive ML Inference Sandbox</h4>
+                        <p class="text-[11px] text-slate-400 font-sans">Run actual simulated tumor segmentations on MRI brain slices</p>
+                    </div>
+                </div>
+                <button onclick="closeMLSandbox()" class="text-slate-400 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-[13px]">
+                <!-- Left: Control & Metrics -->
+                <div class="flex flex-col gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 font-sans">Select Input Scan Type</label>
+                        <select id="mri-slice-select" onchange="updateMRISample()" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-brand-primary">
+                            <option value="axial-flair">Axial T2-FLAIR Brain Slice</option>
+                            <option value="sagittal-t1">Sagittal T1-Weighted Brain Slice</option>
+                            <option value="coronal-t2">Coronal T2-Weighted Brain Slice</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="runInference()" id="inference-trigger-btn" class="w-full bg-gradient-to-r from-blue-600 to-teal-500 hover:opacity-95 text-white font-extrabold py-3 rounded-xl transition-all shadow-lg flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-play"></i> Run Model Inference
+                    </button>
+
+                    <div class="bg-black/50 border border-white/5 p-4 rounded-xl flex flex-col gap-2.5">
+                        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-white/5 pb-2 font-sans">Model Telemetry</div>
+                        <div class="flex justify-between"><span class="text-slate-400">Target Framework:</span> <span class="text-emerald-400 font-bold">PyTorch v2.1</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Latency (Inference Time):</span> <span id="milli-latency" class="text-white font-mono">--</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Computed Dice Coefficient:</span> <span id="dice-factor" class="text-white font-mono">--</span></div>
+                    </div>
+                </div>
+
+                <!-- Right: Visualizer Display -->
+                <div class="flex flex-col items-center justify-center border border-white/10 rounded-2xl bg-black/60 relative overflow-hidden min-h-[220px]">
+                    <!-- MRI Scan Rendering Canvas -->
+                    <div class="relative w-44 h-44 border border-white/10 rounded-xl overflow-hidden shadow-inner">
+                        <!-- Simulated MRI Slices made using pure clean CSS / inline SVGs inside canvas container -->
+                        <div id="mri-slice-graphic" class="absolute inset-0 bg-cover bg-center transition-all duration-300" style="background-image: url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=300'); filter: grayscale(1) contrast(1.2);"></div>
+                        
+                        <!-- Glow Tumor Mask Overlay (Initially Hidden) -->
+                        <div id="tumor-mask-graphic" class="absolute inset-0 bg-rose-500/45 mix-blend-color-burn opacity-0 transition-opacity duration-1000 flex items-center justify-center">
+                            <div class="w-12 h-10 bg-rose-400 rounded-full blur-[6px] border border-rose-300 animate-pulse"></div>
+                        </div>
+                        
+                        <!-- scanning visual matrix effect line -->
+                        <div id="scanning-line" class="absolute left-0 right-0 h-[2px] bg-teal-400 hidden top-0 shadow-[0_0_10px_#2dd4bf]"></div>
+                    </div>
+                    <div id="visualizer-status" class="mt-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">Visualizer Idle</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Details Slide Drawer -->
+    <div id="drawer-container" class="drawer-overlay" onclick="closeDrawer()">
+        <div class="drawer-panel p-6 flex flex-col justify-between" onclick="event.stopPropagation()">
+            <!-- Close Header -->
+            <div class="flex justify-between items-center border-b border-white/10 pb-4">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-diagram-project text-brand-primary"></i>
+                    <h4 id="drawer-title" class="text-base font-heading font-extrabold text-white">Project Case Study</h4>
+                </div>
+                <button onclick="closeDrawer()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- Dynamic Drawer Content (Scrollable) -->
+            <div class="flex-1 overflow-y-auto py-6 pr-2 custom-scrollbar text-[13px] text-slate-300 leading-relaxed space-y-6" id="drawer-body">
+                <!-- Content gets injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Certificate Lightbox -->
+    <div id="cert-modal" class="fixed inset-0 z-[1200] bg-black/95 backdrop-blur-xl hidden items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeCert()">
+        <div class="relative p-2 transform scale-95 transition-transform duration-300" id="cert-content" onclick="event.stopPropagation()">
+            <button onclick="closeCert()" class="absolute -top-12 right-0 w-10 h-10 bg-white/10 hover:bg-rose-500 text-white rounded-full flex items-center justify-center border border-white/20"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <img id="cert-img" src="" class="max-w-[90vw] max-h-[85vh] rounded-xl shadow-2xl border border-white/20" alt="Certificate">
+        </div>
+    </div>
+
+    <!-- ADDED: Premium Admin Login Modal -->
+    <div id="admin-password-modal" class="fixed inset-0 bg-black/85 backdrop-blur-xl flex items-center justify-center z-[2000] hidden no-print">
+        <div class="bg-[#0b1120] border border-white/10 p-8 rounded-3xl max-w-sm w-full mx-4 shadow-2xl relative overflow-hidden text-center animate-fade-in">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-orange-500"></div>
+            <div class="flex flex-col items-center mb-6">
+                <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 text-amber-400 mb-4 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                    <i class="fa-solid fa-fingerprint text-2xl"></i>
+                </div>
+                <h4 class="font-heading font-bold text-xl text-white">Owner Access</h4>
+                <p class="text-[11px] text-slate-400 mt-1 uppercase tracking-wider">Unlock Visual Content Editor</p>
+            </div>
+            <div class="flex flex-col gap-4">
+                <input type="password" id="admin-password-input" placeholder="••••••••" class="bg-black/50 border border-white/10 text-white rounded-xl px-4 py-3 text-center tracking-[0.3em] focus:outline-none focus:border-amber-500/50 shadow-inner" onkeydown="if(event.key === 'Enter') submitAdminPassword()" />
+                <div id="password-error-msg" class="text-[11px] text-rose-400 hidden font-semibold">Incorrect Password</div>
+                <button onclick="submitAdminPassword()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold text-[13px] py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(245,158,11,0.2)]">
+                    Authenticate
+                </button>
+                <button onclick="document.getElementById('admin-password-modal').classList.add('hidden')" class="text-slate-500 text-xs hover:text-white transition-colors">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cinematic Toast Notification -->
+    <div id="toast" class="no-print fixed top-6 right-6 bg-slate-900/90 text-white border border-white/10 px-5 py-3.5 rounded-2xl shadow-2xl transition-all duration-400 -translate-y-20 opacity-0 z-[1300] flex items-center gap-3 backdrop-blur-xl">
+        <div class="bg-gradient-to-br from-brand-primary to-brand-secondary w-6 h-6 flex items-center justify-center rounded-full"><i class="fa-solid fa-check text-[10px] text-white"></i></div>
+        <span id="toast-msg" class="font-bold text-[13px] tracking-wide">Success!</span>
+    </div>
+
+    <style>
+        /* Typing animation dot */
+        .typing-dot { animation: typingBounce 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    </style>
+
+    <script>
+        // --- Interactive Neural Network Canvas Particle System ---
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.radius = Math.random() * 2 + 1.5;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--brand-primary');
+                ctx.fill();
+            }
+            update() {
+                if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+                
+                // Mouse interaction magnet effect
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) {
+                        let force = (mouse.radius - dist) / mouse.radius;
+                        this.x -= dx * force * 0.02;
+                        this.y -= dy * force * 0.02;
+                    }
+                }
+                this.x += this.vx; this.y += this.vy;
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            let count = Math.floor((canvas.width * canvas.height) / 16000);
+            for (let i = 0; i < Math.min(count, 120); i++) {
+                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => p.update());
+            connectParticles();
+            requestAnimationFrame(animateParticles);
+        }
+
+        function connectParticles() {
+            let primaryColor = getComputedStyle(document.body).getPropertyValue('--brand-primary');
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 110) {
+                        let alpha = (110 - dist) / 110 * 0.15;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = primaryColor.replace('rgb', 'rgba').replace(')', `, ${alpha})`);
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        window.onload = function() {
+            resizeCanvas();
+            animateParticles();
+            
+            // Check if admin is already verified in this session
+            if (sessionStorage.getItem('admin_authenticated') === 'true') {
+                document.getElementById('toggle-edit-btn').classList.remove('hidden');
+            }
+        };
+
+        // --- Change Accent Theme matrix ---
+        function changeTheme(themeName) {
+            document.body.className = "p-0 xl:p-8 flex flex-col items-center min-h-screen transition-colors duration-500 color-" + themeName;
+            showToast(`Applied ${themeName.charAt(0).toUpperCase() + themeName.slice(1)} Visual matrix`);
+        }
+
+        // --- Bilingual Language Switcher Logic ---
+        let currentLang = 'en';
+        function toggleLanguage() {
+            const enPortfolio = document.getElementById('portfolio-en');
+            const faPortfolio = document.getElementById('portfolio-fa');
+            const btnText = document.getElementById('lang-btn-text');
+
+            if (currentLang === 'en') {
+                enPortfolio.classList.add('hidden');
+                faPortfolio.classList.remove('hidden');
+                btnText.innerText = "EN / English";
+                currentLang = 'fa';
+                showToast("زبان به فارسی تغییر یافت");
+            } else {
+                faPortfolio.classList.add('hidden');
+                enPortfolio.classList.remove('hidden');
+                btnText.innerText = "FA / فارسی";
+                currentLang = 'en';
+                showToast("Switched layout to English");
+            }
+        }
+
+        // --- ADDED: Admin Authentication Logic ---
+        let clickCounter = 0;
+        let clickTimer = null;
+        function handleAvatarClick() {
+            clickCounter++;
+            clearTimeout(clickTimer);
+            if (clickCounter === 1) {
+                clickTimer = setTimeout(() => { clickCounter = 0; }, 400);
+            } else if (clickCounter === 2) {
+                clickCounter = 0;
+                if (sessionStorage.getItem('admin_authenticated') === 'true') {
+                    // Quick log out and lock editor if clicked when already verified
+                    sessionStorage.removeItem('admin_authenticated');
+                    document.getElementById('toggle-edit-btn').classList.add('hidden');
+                    document.body.classList.remove('edit-mode-active');
+                    const editables = document.querySelectorAll('[data-editable="true"]');
+                    editables.forEach(el => el.setAttribute('contenteditable', 'false'));
+                    document.getElementById('edit-btn-icon').className = "fa-solid fa-pen-nib";
+                    document.getElementById('edit-btn-text').innerText = "Edit Mode";
+                    showToast("Editor Locked & Logged Out.");
+                } else {
+                    // Open password verification modal
+                    document.getElementById('admin-password-modal').classList.remove('hidden');
+                    document.getElementById('password-error-msg').classList.add('hidden');
+                    document.getElementById('admin-password-input').value = '';
+                    setTimeout(() => document.getElementById('admin-password-input').focus(), 150);
+                }
+            }
+        }
+
+        function submitAdminPassword() {
+            const passInput = document.getElementById('admin-password-input').value;
+            if (passInput === "Po88bapo@") {
+                sessionStorage.setItem('admin_authenticated', 'true');
+                document.getElementById('admin-password-modal').classList.add('hidden');
+                document.getElementById('toggle-edit-btn').classList.remove('hidden');
+                showToast("Access Unlocked! Click 'Edit Mode' on the floating dock.");
+            } else {
+                const errMsg = document.getElementById('password-error-msg');
+                errMsg.classList.remove('hidden');
+                errMsg.classList.add('animate-pulse');
+            }
+        }
+
+        function toggleEditMode() {
+            const isEditing = document.body.classList.toggle('edit-mode-active');
+            const editables = document.querySelectorAll('[data-editable="true"]');
+            const btnIcon = document.getElementById('edit-btn-icon');
+            const btnText = document.getElementById('edit-btn-text');
+
+            if (isEditing) {
+                editables.forEach(el => el.setAttribute('contenteditable', 'true'));
+                btnIcon.className = "fa-solid fa-lock";
+                btnText.innerText = "Lock Layout";
+                showToast("Visual Editor enabled. Click directly on text box to edit.");
+            } else {
+                editables.forEach(el => el.setAttribute('contenteditable', 'false'));
+                btnIcon.className = "fa-solid fa-pen-nib";
+                btnText.innerText = "Edit Mode";
+                showToast("Visual Editor locked.");
+            }
+        }
+
+        // --- EXTENDED: Multi-attribute visual editor insertions ---
+        function addNewSkill(category) {
+            const name = prompt(category.startsWith('fa') ? "عنوان مهارت را وارد کنید:" : "Enter skill name:");
+            if (!name) return;
+
+            const container = document.getElementById(`skills-${category}`);
+            if (container) {
+                const pill = document.createElement('span');
+                pill.className = "skill-pill relative group";
+                if (category.includes('ai')) pill.className += " highlight";
+
+                const deleteText = category.startsWith('fa') ? 'مهارت حذف شد' : 'Skill removed';
+                pill.innerHTML = `
+                    <span data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${name}</span>
+                    <button class="edit-only absolute -top-2 -right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-4 h-4 flex items-center justify-center text-[8px] font-bold shadow z-10" onclick="this.parentElement.remove(); showToast('${deleteText}');">×</button>
+                `;
+                container.appendChild(pill);
+                showToast(category.startsWith('fa') ? "مهارت با موفقیت اضافه شد" : "Skill pill appended successfully!");
+            }
+        }
+
+        function addNewCertificate(lang) {
+            const title = prompt(lang === 'en' ? "Enter certificate title:" : "عنوان گواهی/مدرک را وارد کنید:");
+            if (!title) return;
+            const issuer = prompt(lang === 'en' ? "Enter issuer platform (e.g. Kaggle):" : "مرجع صادرکننده را وارد کنید:");
+            const imgUrl = prompt(lang === 'en' ? "Enter image URL for certificate lightbox (optional):" : "آدرس اینترنتی تصویر مدرک را وارد کنید (اختیاری):") || "https://placehold.co/800x600/0f172a/2dd4bf?text=Certificate";
+
+            const grid = document.getElementById(`cert-grid-${lang}`);
+            if (grid) {
+                const card = document.createElement('div');
+                card.className = "bento-card group cursor-pointer relative";
+                card.setAttribute('onclick', `openCert('${imgUrl}')`);
+
+                const deleteText = lang === 'en' ? 'Card removed' : 'مدرک حذف شد';
+                card.innerHTML = `
+                    <button class="edit-only absolute top-2 ${lang === 'en' ? 'right-2' : 'left-2'} bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="event.stopPropagation(); this.parentElement.remove(); showToast('${deleteText}');">×</button>
+                    <h4 class="text-[12px] font-bold text-slate-900 leading-tight mb-1 group-hover:text-brand-secondary transition-colors" data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${title}</h4>
+                    <span class="text-[9.5px] font-semibold text-slate-500 flex items-center gap-1">
+                        <i class="fa-solid fa-certificate text-brand-primary"></i> 
+                        <span data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${issuer || 'Platform'}</span>
+                    </span>
+                `;
+                grid.appendChild(card);
+                showToast(lang === 'en' ? "Certificate card added!" : "کارت مدرک اضافه شد.");
+            }
+        }
+
+        function addNewExecutive(lang) {
+            const list = document.getElementById(`executive-list-${lang}`);
+            if (list) {
+                const card = document.createElement('div');
+                card.className = "project-card group relative";
+                if (lang === 'fa') card.setAttribute('style', 'padding-left: 0; padding-right: 24px;');
+
+                const title = lang === 'en' ? "New Executive Role" : "عنوان سمت اجرایی جدید";
+                const period = lang === 'en' ? "2024 - 2025" : "۱۴۰۳ - ۱۴۰۴";
+                const org = lang === 'en' ? "Biomedical Department | University Of Isfahan" : "انجمن علمی مهندسی پزشکی دانشگاه اصفهان";
+                const desc = lang === 'en' ? "Organized computational medical programs, deep learning courses, and technical seminars." : "برنامه‌ریزی، مدیریت و اجرای دوره‌های آموزشی و وبینارهای تخصصی هوش مصنوعی.";
+                const ref = lang === 'en' ? "Ref: 999999/1404 | Authorized by Board" : "Ref: ۹۹۹۹۹۹/۱۴۰۴ | با تأیید هیئت مدیره";
+
+                const deleteText = lang === 'en' ? 'Role removed' : 'کارت سوابق حذف شد';
+                const dotStyle = lang === 'fa' ? 'left: auto; right: -4px;' : 'left: -4px; top: 6px;';
+
+                card.innerHTML = `
+                    <button class="edit-only absolute top-0 ${lang === 'en' ? 'right-0' : 'left-0'} bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('${deleteText}');">×</button>
+                    <div class="project-dot" style="${dotStyle}"></div>
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-heading font-extrabold text-[15.5px] text-slate-900 tracking-tight" data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${title}</h3>
+                        <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${period}</span>
+                    </div>
+                    <p class="text-[12px] font-bold text-brand-secondary mb-1" data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${org}</p>
+                    <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2" data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${desc}</p>
+                    <span class="inline-block text-[10px] text-slate-400 bg-slate-50 border border-slate-200/60 px-2 py-0.5 rounded font-mono" dir="ltr" data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${ref}</span>
+                `;
+                list.appendChild(card);
+                showToast(lang === 'en' ? "Executive role added!" : "کارت سمت اجرایی اضافه شد.");
+            }
+        }
+
+        function addNewProject(lang) {
+            const title = prompt(lang === 'en' ? "Enter project title:" : "عنوان پروژه را وارد کنید:");
+            if (!title) return;
+            const year = prompt(lang === 'en' ? "Enter project year (e.g., 2023):" : "سال پروژه را وارد کنید (مثلاً ۱۴۰۲):") || (lang === 'en' ? "2026" : "۱۴۰۵");
+            const techInput = prompt(lang === 'en' ? "Enter tech stack (comma-separated, e.g., PyTorch, OpenCV):" : "تکنولوژی‌ها را با کاما جدا کنید (مثلاً PyTorch, OpenCV):") || "";
+            const desc = prompt(lang === 'en' ? "Enter project description:" : "توضیحات پروژه را وارد کنید:") || "";
+
+            const list = document.getElementById(`projects-list-${lang}`);
+            if (list) {
+                const card = document.createElement('div');
+                card.className = "project-card group relative";
+                if (lang === 'fa') card.setAttribute('style', 'padding-left: 0; padding-right: 24px;');
+
+                const deleteText = lang === 'en' ? 'Project removed' : 'پروژه حذف شد';
+                const dotStyle = lang === 'fa' ? 'left: auto; right: -4px;' : 'left: -4px; top: 6px;';
+
+                let techHTML = "";
+                if (techInput) {
+                    techInput.split(',').forEach(tech => {
+                        if (tech.trim()) {
+                            techHTML += `<span data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${tech.trim()}</span> `;
+                        }
+                    });
+                }
+
+                card.innerHTML = `
+                    <button class="edit-only absolute top-0 ${lang === 'en' ? 'right-0' : 'left-0'} bg-rose-600 hover:bg-rose-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold shadow z-20" onclick="this.parentElement.remove(); showToast('${deleteText}');">×</button>
+                    <div class="project-dot" style="${dotStyle}"></div>
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-heading font-extrabold text-[15.5px] text-slate-900 tracking-tight group-hover:text-brand-secondary transition-colors cursor-pointer" data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${title}</h3>
+                        <span class="text-[10.5px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded shadow-sm" data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${year}</span>
+                    </div>
+                    <div class="tech-stack">
+                        ${techHTML}
+                    </div>
+                    <p class="text-[12.5px] text-slate-600 leading-relaxed mb-2" data-editable="true" contenteditable="${document.body.classList.contains('edit-mode-active')}">${desc}</p>
+                `;
+                list.appendChild(card);
+                showToast(lang === 'en' ? "New project card added!" : "پروژه جدید با موفقیت اضافه شد.");
+            }
+        }
+
+        function exportHTML() {
+            // Create a clean clone of the document element to prepare clean code output
+            const docClone = document.documentElement.cloneNode(true);
+            
+            // Remove edit active state styling from the clone
+            docClone.classList.remove('edit-mode-active');
+            const bodies = docClone.querySelectorAll('body');
+            bodies.forEach(b => b.classList.remove('edit-mode-active'));
+
+            // Remove contenteditable attributes to make the static export clean
+            docClone.querySelectorAll('[contenteditable]').forEach(el => {
+                el.removeAttribute('contenteditable');
+            });
+            
+            // Keep admin modal hidden inside clone
+            const modal = docClone.querySelector('#admin-password-modal');
+            if (modal) modal.classList.add('hidden');
+
+            const fullHTML = "<!DOCTYPE html>\n" + docClone.outerHTML;
+
+            // Copy output directly into clipboard utilizing robust text-area fallbacks
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = fullHTML;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Clean edited HTML code copied to clipboard! Save it as index.html.");
+            } catch (err) {
+                showToast("Failed to copy HTML code automatically.");
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        // --- Interactive Case Studies & SVG Flowcharts Drawer ---
+        const CASE_STUDIES = {
+            brain: {
+                title: "Brain Tumor Segmentation Case Study",
+                body: `
+                    <div class="space-y-4">
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                            <h5 class="font-bold text-white mb-2">Architectural Overview</h5>
+                            <p class="text-[12px] text-slate-400">Below is the optimized U-Net encoder-decoder structure designed for volumetric MRI brain slices processing.</p>
+                            <!-- Embedded SVG Pipeline -->
+                            <div class="mt-4 flex justify-center">
+                                <svg viewBox="0 0 400 130" class="w-full max-w-[340px] text-white">
+                                    <rect x="10" y="40" width="70" height="40" rx="8" fill="rgba(20,184,166,0.15)" stroke="var(--brand-primary)" stroke-width="1.5"/>
+                                    <text x="45" y="65" font-size="10" fill="white" font-weight="bold" text-anchor="middle">MRI Input</text>
+                                    
+                                    <line x1="80" y1="60" x2="110" y2="60" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+                                    
+                                    <rect x="110" y="25" width="80" height="70" rx="8" fill="rgba(37,99,235,0.15)" stroke="#3b82f6" stroke-width="1.5"/>
+                                    <text x="150" y="55" font-size="9" fill="white" font-weight="bold" text-anchor="middle">ResNet Encoder</text>
+                                    <text x="150" y="75" font-size="8" fill="#94a3b8" text-anchor="middle">Feature Maps</text>
+                                    
+                                    <line x1="190" y1="60" x2="220" y2="60" stroke="#94a3b8" stroke-width="1.5"/>
+                                    
+                                    <rect x="220" y="40" width="80" height="40" rx="8" fill="rgba(20,184,166,0.15)" stroke="var(--brand-primary)" stroke-width="1.5"/>
+                                    <text x="260" y="65" font-size="9" fill="white" font-weight="bold" text-anchor="middle">Decoder & skip</text>
+                                    
+                                    <line x1="300" y1="60" x2="330" y2="60" stroke="#94a3b8" stroke-width="1.5"/>
+                                    
+                                    <circle cx="350" cy="60" r="18" fill="rgba(239,68,68,0.2)" stroke="#ef4444" stroke-width="1.5"/>
+                                    <text x="350" y="63" font-size="9" fill="#fca5a5" font-weight="bold" text-anchor="middle">Mask</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
+                                <div class="text-3xl font-extrabold text-white">0.912</div>
+                                <div class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider font-sans">Average Dice Score</div>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
+                                <div class="text-3xl font-extrabold text-white">24ms</div>
+                                <div class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider font-sans">Latency per frame</div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <h5 class="font-bold text-white">Challenges & Breakthroughs</h5>
+                            <p class="text-[12.5px] text-slate-300">Class imbalance is highly present in brain tumor scans since tumor structures occupy only ~1.5% of the total brain tissue voxel space. Implemented a combined <strong>Dice Loss + Focal Loss function</strong> that significantly penalized misclassifications on sparse structural boundaries, increasing boundary precision metrics by over 14%.</p>
+                        </div>
+                    </div>
+                `
+            },
+            xray: {
+                title: "Automated Chest X-Ray Case Study",
+                body: `
+                    <div class="space-y-4">
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                            <h5 class="font-bold text-white mb-2">Grad-CAM Attribution Visualization</h5>
+                            <p class="text-[12px] text-slate-400">Grad-CAM allows physicians to audit AI decisions by computing backpropagation gradients on the last convolutional layer.</p>
+                            <div class="mt-4 flex justify-center gap-4">
+                                <div class="relative w-28 h-28 border border-white/10 rounded-xl overflow-hidden">
+                                    <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=200'); filter: grayscale(1);"></div>
+                                    <div class="absolute bottom-1 left-1 bg-black/75 px-1.5 py-0.5 rounded text-[8px] text-white">Input X-Ray</div>
+                                </div>
+                                <div class="relative w-28 h-28 border border-white/10 rounded-xl overflow-hidden">
+                                    <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=200'); filter: grayscale(1);"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-amber-500/50 via-red-500/40 to-transparent mix-blend-color-dodge"></div>
+                                    <div class="absolute bottom-1 left-1 bg-black/75 px-1.5 py-0.5 rounded text-[8px] text-white">Attention Map</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
+                                <div class="text-3xl font-extrabold text-white">96.8%</div>
+                                <div class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider font-sans">Classification AUC</div>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
+                                <div class="text-3xl font-extrabold text-white">100K+</div>
+                                <div class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider font-sans">Training Samples</div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <h5 class="font-bold text-white">Engineering Pipelines</h5>
+                            <p class="text-[12.5px] text-slate-300">Fine-tuned ResNet50 model weights leveraging ImageNet initial parameters. Built automated data loading pre-fetching configurations inside TensorFlow to maximize GPU memory allocation and prevent dataloader bottlenecking during heavy batch operations.</p>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function openDrawer(caseKey) {
+            const data = CASE_STUDIES[caseKey];
+            if(!data) return;
+            document.getElementById('drawer-title').innerText = data.title;
+            document.getElementById('drawer-body').innerHTML = data.body;
+            document.getElementById('drawer-container').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeDrawer() {
+            document.getElementById('drawer-container').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- Interactive Model Inference Sandbox Engine ---
+        const SAMPLE_IMAGES = {
+            'axial-flair': 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=300',
+            'sagittal-t1': 'https://images.unsplash.com/photo-1530026405186-ed1ea0ac7a63?auto=format&fit=crop&q=80&w=300',
+            'coronal-t2': 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80&w=300'
+        };
+
+        function openMLSandbox() {
+            document.getElementById('ml-sandbox').classList.remove('hidden');
+            document.getElementById('ml-sandbox').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMLSandbox() {
+            document.getElementById('ml-sandbox').classList.add('hidden');
+            document.getElementById('ml-sandbox').classList.remove('flex');
+            document.body.style.overflow = 'auto';
+            resetSandbox();
+        }
+
+        function updateMRISample() {
+            const sel = document.getElementById('mri-slice-select').value;
+            document.getElementById('mri-slice-graphic').style.backgroundImage = `url('${SAMPLE_IMAGES[sel]}')`;
+            resetSandbox();
+        }
+
+        function resetSandbox() {
+            document.getElementById('tumor-mask-graphic').classList.add('opacity-0');
+            document.getElementById('milli-latency').innerText = '--';
+            document.getElementById('dice-factor').innerText = '--';
+            document.getElementById('visualizer-status').innerText = 'Visualizer Idle';
+        }
+
+        function runInference() {
+            const btn = document.getElementById('inference-trigger-btn');
+            const status = document.getElementById('visualizer-status');
+            const scanLine = document.getElementById('scanning-line');
+            
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing Inference...`;
+            scanLine.classList.remove('hidden');
+            scanLine.style.animation = "float 2s linear infinite";
+
+            // Stage 1: Pre-processing Simulation
+            status.innerText = "Normalizing voxel intensities...";
+            
+            setTimeout(() => {
+                // Stage 2: Feature maps
+                status.innerText = "Extracting convolutional feature maps...";
+            }, 800);
+
+            setTimeout(() => {
+                // Stage 3: Activation Maps
+                status.innerText = "Decoding segmentation boundary...";
+            }, 1600);
+
+            setTimeout(() => {
+                // Done! Show tumor overlay and metrics
+                document.getElementById('tumor-mask-graphic').classList.remove('opacity-0');
+                scanLine.classList.add('hidden');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-play"></i> Run Model Inference`;
+                
+                // Random highly realistic ML Latency/Metrics
+                const latency = (Math.random() * 5 + 21).toFixed(1) + " ms";
+                const dice = (Math.random() * 0.02 + 0.911).toFixed(3);
+                
+                document.getElementById('milli-latency').innerText = latency;
+                document.getElementById('dice-factor').innerText = dice;
+                status.innerText = "Inference complete.";
+                showToast("Neural net output calculated!");
+            }, 2400);
+        }
+
+        // --- Core Recruiter Copilot (Copilot Hub) ---
+        function switchTab(target) {
+            ['chat', 'matcher', 'outreach'].forEach(tab => {
+                document.getElementById(`tab-content-${tab}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${tab}`).classList.remove('active', 'text-white');
+                document.getElementById(`tab-btn-${tab}`).classList.add('text-slate-400');
+            });
+            document.getElementById(`tab-content-${target}`).classList.remove('hidden');
+            document.getElementById(`tab-content-${target}`).classList.add('flex');
+            document.getElementById(`tab-btn-${target}`).classList.add('active', 'text-white');
+            document.getElementById(`tab-btn-${target}`).classList.remove('text-slate-400');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            t.classList.remove('-translate-y-20', 'opacity-0');
+            setTimeout(() => t.classList.add('-translate-y-20', 'opacity-0'), 3500);
+        }
+
+        function copyToClipboard(elementId, text = null) {
+            const content = text || document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(content);
+            showToast("Copied to clipboard!");
+        }
+
+        function openCert(url) {
+            const modal = document.getElementById('cert-modal');
+            const content = document.getElementById('cert-content');
+            document.getElementById('cert-img').src = url;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCert() {
+            const modal = document.getElementById('cert-modal');
+            const content = document.getElementById('cert-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+            document.body.style.overflow = 'auto';
+        }
+
+        // AI Logic & Fallback Responses
+        const SIMULATED_DATA = {
+            skills: "Pouya has rigorous training in **Computer Vision** and **Deep Learning**, actively implementing models using **PyTorch**, **TensorFlow**, **OpenCV**, and **Python**.",
+            projects: "His primary focus is **Medical AI**; he constructed a **Brain Tumor segmentation model** (achieving >0.91 Dice) and designed a ResNet50 framework for **Chest X-Ray Pneumonia diagnosis**.",
+            deploy: "Yes, Pouya understands deployment, leveraging **Docker containers**, workflow orchestration with **Git**, and robust pipeline building.",
+            executives: "Pouya has served as **Director & Media Manager (Editor-in-Chief)** of **Neuron Media** (Ref: 105993/1404) at University of Isfahan and as an **Active Executive Member of the Biomedical Engineering Scientific Association** (Ref: 153804/1404)."
+        };
+
+        function getSimulatedResponse(q) {
+            q = q.toLowerCase();
+            if(q.includes('dataset') || q.includes('data') || q.includes('medical')) return "Pouya has extensive experience utilizing highly complex clinical datasets such as the **BraTS** database (Brain Tumor Segmentation) and **NIH Chest X-Ray** public repositories, handling raw DICOM metadata parsing and voxel transformations.";
+            if(q.includes('deploy') || q.includes('production') || q.includes('docker')) return SIMULATED_DATA.deploy;
+            if(q.includes('skill') || q.includes('tech') || q.includes('stack')) return SIMULATED_DATA.skills;
+            if(q.includes('executive') || q.includes('leader') || q.includes('association') || q.includes('neuron')) return SIMULATED_DATA.executives;
+            return "Pouya Barani is an exceptional ML Engineer with a solid background in Biomedical Engineering. He is currently looking for active roles. Feel free to contact him directly!";
+        }
+
+        async function fetchGemini(prompt, system) {
+            const key = document.getElementById('api-key').value.trim();
+            if (!key) throw new Error("No API Key");
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: system }] } })
+            });
+            if (res.ok) return (await res.json()).candidates[0].content.parts[0].text;
+            throw new Error("API Error");
+        }
+
+        function fillAndSend(text) {
+            document.getElementById('chat-input').value = text;
+            handleChat();
+        }
+
+        async function handleChat() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            appendBubble(text, 'user');
+            input.value = '';
+            
+            const typingHtml = `<div class="flex gap-1 items-center h-4"><div class="w-1.5 h-1.5 bg-brand-primary rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-brand-primary rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-brand-primary rounded-full typing-dot"></div></div>`;
+            const typingId = appendBubble(typingHtml, 'bot', true);
+            
+            try {
+                const context = document.getElementById('printable-resume-card').innerText;
+                const apiKey = document.getElementById('api-key').value;
+                let responseText = "";
+                
+                if(apiKey) {
+                    responseText = await fetchGemini(text, `You are Pouya Barani's specialized, elite executive AI recruiter. Answer concisely and professionally based on his resume data:\n${context}`);
+                } else {
+                    await new Promise(r => setTimeout(r, 1200));
+                    responseText = getSimulatedResponse(text);
+                }
+                updateBubble(typingId, responseText);
+            } catch (e) {
+                updateBubble(typingId, "Fallback response: " + getSimulatedResponse(text));
+            }
+        }
+
+        function appendBubble(text, type, isTyping = false) {
+            const box = document.getElementById('chat-box');
+            const div = document.createElement('div');
+            const id = 'msg-' + Date.now();
+            div.id = id;
+            
+            if (type === 'user') {
+                div.className = "flex items-start gap-3 flex-row-reverse mt-4 w-full animate-fade-in";
+                div.innerHTML = `<div class="w-8 h-8 bg-gradient-to-br from-slate-700 to-slate-900 rounded-full flex items-center justify-center text-white text-[9px] font-bold mt-1 flex-shrink-0 border border-white/10 shadow-md">HR</div><div class="chat-bubble-user text-white px-4 py-2.5 rounded-[18px] rounded-tr-sm max-w-[85%] break-words font-medium">${text}</div>`;
+            } else {
+                div.className = "flex items-start gap-3 mt-4 w-full animate-fade-in";
+                div.innerHTML = `<div class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center border border-white/10 mt-1 text-brand-primary flex-shrink-0 shadow-lg"><i class="fa-solid fa-robot text-[11px]"></i></div><div class="msg-content chat-bubble-ai px-4 py-2.5 rounded-[18px] rounded-tl-sm text-slate-200 max-w-[85%] font-medium leading-relaxed">${text}</div>`;
+            }
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            return id;
+        }
+
+        function updateBubble(id, text) {
+            const el = document.getElementById(id).querySelector('.msg-content');
+            if(el) {
+                el.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-extrabold">$1</strong>').replace(/\n/g, '<br>');
+                const box = document.getElementById('chat-box');
+                box.scrollTop = box.scrollHeight;
+            }
+        }
+
+        // Matcher
+        async function runMatcher() {
+            const jd = document.getElementById('jd-input').value.trim();
+            if (!jd) { showToast("Please paste a Job Description first."); return; }
+            
+            const btn = document.getElementById('matcher-btn');
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-brand-secondary"></i> Running Deep Match...`;
+            document.getElementById('matcher-results').classList.add('hidden');
+            document.getElementById('match-bar').style.width = "0%";
+            
+            const apiKey = document.getElementById('api-key').value;
+            let score = 0, verdict = "";
+
+            try {
+                if(apiKey) {
+                    const context = document.getElementById('printable-resume-card').innerText;
+                    const res = await fetchGemini(`JD:\n${jd}\nResume:\n${context}\nOutput exactly: "MATCH: X%" on line 1. Then 2 short bullets on why.`, "ATS Matcher Engine");
+                    score = parseInt((res.match(/MATCH:\s*(\d+)%/i) || [,85])[1]);
+                    verdict = res.replace(/MATCH:\s*\d+%/i, '').trim();
+                } else {
+                    await new Promise(r => setTimeout(r, 1600));
+                    let matches = 0;
+                    const keywords = ['python', 'pytorch', 'tensorflow', 'vision', 'machine learning', 'medical', 'opencv'];
+                    keywords.forEach(kw => { if(jd.toLowerCase().includes(kw)) matches++; });
+                    score = Math.min(98, 48 + (matches * 10)); 
+                    verdict = `<li>Excellent alignment with your stated core technologies.</li><li>Demonstrated capability implementing medical semantic segmentation models.</li>`;
+                }
+
+                document.getElementById('match-percentage').innerText = score + "%";
+                document.getElementById('matcher-results').classList.remove('hidden');
+                document.getElementById('matcher-results').classList.add('flex');
+                
+                setTimeout(() => { document.getElementById('match-bar').style.width = score + "%"; }, 100);
+                document.getElementById('matcher-verdict').innerHTML = `<ul class="list-disc pl-4 space-y-1.5">${verdict.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<strong class="text-white">$1</strong>')}</ul>`;
+
+            } catch (e) {
+                showToast("Error processing calculations.");
+            } finally {
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-brand-secondary"></i> Compute Alignment`;
+            }
+        }
+
+        // Email Drafter
+        async function generateEmail() {
+            const btn = document.getElementById('email-btn');
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Writing Template...`;
+            document.getElementById('email-result').classList.add('hidden');
+
+            const apiKey = document.getElementById('api-key').value;
+            let emailText = "";
+
+            try {
+                if(apiKey) {
+                    const jd = document.getElementById('jd-input').value;
+                    const context = document.getElementById('printable-resume-card').innerText;
+                    const prompt = jd ? `Compose email based on this JD: ${jd}` : `Write interview invite email template to Pouya Barani.`;
+                    emailText = await fetchGemini(prompt, "You are an executive recruiter. Write a compelling, high-quality interview invitation. Do not include brackets.");
+                } else {
+                    await new Promise(r => setTimeout(r, 1400));
+                    emailText = `Subject: ML Engineering Interview / Pouya Barani\n\nHi Pouya,\n\nI recently analyzed your incredible portfolio web-application. Your advanced pipeline developments, specifically the Brain Tumor MRI Segmentation Framework (utilizing optimized PyTorch architectures), caught our attention.\n\nYour solid background in Biomedical Engineering combined with hands-on computer vision model development fits perfectly with what we are scaling.\n\nAre you available for a brief introductory call this coming week?\n\nBest regards,\n\nExecutive Talent Acquisition`;
+                }
+
+                document.getElementById('email-body').innerText = emailText;
+                document.getElementById('email-result').classList.remove('hidden');
+            } catch (e) {
+                showToast("Error generating draft.");
+            } finally {
+                btn.innerHTML = `<i class="fa-solid fa-pen-fancy"></i> Compose Email Template`;
+            }
+        }
+    </script>
+</body>
+</html>
